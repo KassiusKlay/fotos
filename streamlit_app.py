@@ -1,0 +1,84 @@
+import streamlit as st
+from streamlit_folium import st_folium
+import folium
+from PIL import Image
+from io import BytesIO
+import psycopg2
+
+st.set_page_config(layout='wide')
+proximity_round = 2
+
+
+def init_connection():
+    connection = psycopg2.connect(**st.secrets['postgres'])
+    connection.autocommit = True
+    return connection
+
+
+connection = init_connection()
+
+
+def run_query(connection, query, fetch=None):
+    with connection.cursor() as cur:
+        cur.execute(query)
+        connection.commit()
+        if fetch:
+            return cur.fetchall()
+
+
+@st.experimental_singleton
+def get_db_data():
+    connection = init_connection()
+    data = run_query(connection, """
+            SELECT json, img_bytea from fotos
+            WHERE json->>'latitude' is NOT NULL""", 1)
+    return data
+
+
+def get_image_from_byte_array(byte_array):
+    byte_object = BytesIO(byte_array)
+    img = Image.open(byte_object)
+    return img
+
+
+def get_folium_map(data):
+    m = folium.Map(
+            location=[39.557191, -7.8536599],
+            zoom_start=3,
+            tiles='cartodbpositron',)
+    for i in data:
+        metadata = i[0]
+        latitude = round(metadata['latitude'], proximity_round)
+        longitude = round(metadata['longitude'], proximity_round)
+        folium.Marker(
+                location=[latitude, longitude],
+                icon=folium.Icon(color='green', prefix='fa', icon='leaf'),
+                ).add_to(m)
+    return m
+
+
+def main():
+    data = get_db_data()
+    if 'm' not in st.session_state:
+        st.session_state['m'] = get_folium_map(data)
+    folium_data = st_folium(st.session_state.m, width=3000)
+    cols = st.columns(3)
+    try:
+        clicked_lat = folium_data['last_object_clicked']['lat']
+        clicked_lng = folium_data['last_object_clicked']['lng']
+        results = [
+                i[1] for i in data if (
+                    round(i[0]['latitude'], proximity_round) == clicked_lat and
+                    round(i[0]['longitude'], proximity_round) == clicked_lng)]
+        i = 0
+        for result in results:
+            cols[i].image(get_image_from_byte_array(result))
+            i += 1
+            if i == 3:
+                i = 0
+    except TypeError:
+        st.warning('Por favor clique num ponto para ver a imagem')
+
+
+if __name__ == '__main__':
+    main()
