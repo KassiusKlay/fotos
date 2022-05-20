@@ -41,7 +41,6 @@ def get_image_from_byte_array(byte_array):
     return img
 
 
-@st.experimental_memo
 def get_folium_map(data):
     m = folium.Map(
             location=[39.557191, -7.8536599],
@@ -63,9 +62,10 @@ def main():
     Vegan Food 🌱 around the World 🗺️
     """)
     data = get_db_data()
-    if 'm' not in st.session_state:
-        st.session_state['m'] = get_folium_map(data)
-    folium_data = st_folium(st.session_state.m, width=1200)
+    m = get_folium_map(data)
+    # if 'm' not in st.session_state:
+        # st.session_state['m'] = get_folium_map(data)
+    folium_data = st_folium(m, width=1200)
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
