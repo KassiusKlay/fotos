@@ -41,6 +41,7 @@ def get_image_from_byte_array(byte_array):
     return img
 
 
+@st.experimental_memo
 def get_folium_map(data):
     m = folium.Map(
             location=[39.557191, -7.8536599],
