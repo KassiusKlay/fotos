@@ -62,7 +62,7 @@ def main():
     """)
     data = get_db_data()
     m = get_folium_map(data)
-    folium_data = st_folium(m, width=1200)
+    st_folium(m, width=1200)
     # cols = st.columns(3)
     # try:
         # clicked_lat = folium_data['last_object_clicked']['lat']
