@@ -26,7 +26,7 @@ def run_query(connection, query, fetch=None):
         if fetch:
             return cur.fetchall()
 
-
+@st.experimental_memo
 def get_db_data():
     data = run_query(connection, """
             SELECT * from fotos
