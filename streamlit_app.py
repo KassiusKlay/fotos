@@ -30,7 +30,7 @@ def run_query(connection, query, fetch=None):
 def get_db_data():
     connection = init_connection()
     data = run_query(connection, """
-            SELECT json, img_bytea from fotos
+            SELECT * from fotos
             WHERE json->>'latitude' is NOT NULL""", 1)
     return data
 
@@ -47,7 +47,7 @@ def get_folium_map(data):
             zoom_start=3,
             tiles='cartodbpositron',)
     for i in data:
-        metadata = i[0]
+        metadata = i[1]
         latitude = round(metadata['latitude'], proximity_round)
         longitude = round(metadata['longitude'], proximity_round)
         folium.Marker(
@@ -58,6 +58,9 @@ def get_folium_map(data):
 
 
 def main():
+    st.header("""
+    Vegan Food 🌱 around the World 🗺️
+    """)
     data = get_db_data()
     if 'm' not in st.session_state:
         st.session_state['m'] = get_folium_map(data)
@@ -67,12 +70,13 @@ def main():
         clicked_lat = folium_data['last_object_clicked']['lat']
         clicked_lng = folium_data['last_object_clicked']['lng']
         results = [
-                i[1] for i in data if (
-                    round(i[0]['latitude'], proximity_round) == clicked_lat and
-                    round(i[0]['longitude'], proximity_round) == clicked_lng)]
+                i[0] for i in data if (
+                    round(i[1]['latitude'], proximity_round) == clicked_lat and
+                    round(i[1]['longitude'], proximity_round) == clicked_lng)]
         i = 0
+        url_prefix = 'https://res.cloudinary.com/kassiusklay/'
         for result in results:
-            cols[i].image(get_image_from_byte_array(result))
+            cols[i].image(f'{url_prefix + result}')
             i += 1
             if i == 3:
                 i = 0
