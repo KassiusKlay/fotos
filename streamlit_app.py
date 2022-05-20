@@ -64,7 +64,7 @@ def main():
     data = get_db_data()
     if 'm' not in st.session_state:
         st.session_state['m'] = get_folium_map(data)
-    folium_data = st_folium(st.session_state.m, width=3000)
+    folium_data = st_folium(st.session_state.m, width=1200)
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
