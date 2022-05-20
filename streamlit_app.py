@@ -96,12 +96,27 @@ def teste():
         metadata = i[1]
         latitude = round(metadata['latitude'], proximity_round)
         longitude = round(metadata['longitude'], proximity_round)
-        fg.add_child(folium.Marker(
-            location=[latitude, longitude],
-            icon=folium.Icon(color='green', prefix='fa', icon='leaf')))
+        fg.add_child(folium.Marker(location=[latitude, longitude]))
     m.add_child(fg)
 
-    st_data = st_folium(m, width = 725)
+    folium_data = st_folium(m, width = 725)
+        cols = st.columns(3)
+    try:
+        clicked_lat = folium_data['last_object_clicked']['lat']
+        clicked_lng = folium_data['last_object_clicked']['lng']
+        results = [
+                i[0] for i in data if (
+                    round(i[1]['latitude'], proximity_round) == clicked_lat and
+                    round(i[1]['longitude'], proximity_round) == clicked_lng)]
+        i = 0
+        url_prefix = 'https://res.cloudinary.com/kassiusklay/'
+        for result in results:
+            cols[i].image(f'{url_prefix + result}')
+            i += 1
+            if i == 3:
+                i = 0
+    except TypeError:
+        st.warning('Por favor clique num ponto para ver a imagem')
 
 if __name__ == '__main__':
     teste()
