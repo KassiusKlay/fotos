@@ -98,7 +98,7 @@ def teste():
         longitude = round(metadata['longitude'], proximity_round)
         fg.add_child(folium.Marker(
             location=[latitude, longitude],
-            icon=folium.Icon(color='green', prefix='fa', icon='leaf'))
+            icon=folium.Icon(color='green', prefix='fa', icon='leaf')))
     m.add_child(fg)
 
     st_data = st_folium(m, width = 725)
