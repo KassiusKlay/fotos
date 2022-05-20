@@ -99,7 +99,7 @@ def teste():
         fg.add_child(folium.Marker(location=[latitude, longitude]))
     m.add_child(fg)
 
-    folium_data = st_folium(m, width = 725)
+    folium_data = st_folium(m, width=2000)
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
