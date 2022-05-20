@@ -39,13 +39,6 @@ def get_image_from_byte_array(byte_array):
     img = Image.open(byte_object)
     return img
 
-
-def get_folium_map(data):
-
-
-    return m
-
-
 def main():
     st.header("""
     Vegan Food 🌱 around the World 🗺️
@@ -54,43 +47,6 @@ def main():
     m = folium.Map(
             location=[39.557191, -7.8536599],
             zoom_start=3,)
-#     for i in data:
-        # metadata = i[1]
-        # latitude = round(metadata['latitude'], proximity_round)
-        # longitude = round(metadata['longitude'], proximity_round)
-        # folium.Marker(
-                # location=[latitude, longitude],
-                # icon=folium.Icon(color='green', prefix='fa', icon='leaf'),
-                # ).add_to(m)
-    folium_data = st_folium(m, width=725)
-    cols = st.columns(3)
-    try:
-        clicked_lat = folium_data['last_object_clicked']['lat']
-        clicked_lng = folium_data['last_object_clicked']['lng']
-        results = [
-                i[0] for i in data if (
-                    round(i[1]['latitude'], proximity_round) == clicked_lat and
-                    round(i[1]['longitude'], proximity_round) == clicked_lng)]
-        i = 0
-        url_prefix = 'https://res.cloudinary.com/kassiusklay/'
-        for result in results:
-            cols[i].image(f'{url_prefix + result}')
-            i += 1
-            if i == 3:
-                i = 0
-    except TypeError:
-        st.warning('Por favor clique num ponto para ver a imagem')
-
-        
-def teste():
-    # center on Liberty Bell, add marker
-    m = folium.Map(location=[39.949610, -75.150282], zoom_start=16)
-    folium.Marker(
-        [39.949610, -75.150282], 
-        popup="Liberty Bell", 
-        tooltip="Liberty Bell"
-    ).add_to(m)
-    data = get_db_data()
     fg = folium.FeatureGroup(name='Marks')
     for i in data:
         metadata = i[1]
@@ -98,8 +54,7 @@ def teste():
         longitude = round(metadata['longitude'], proximity_round)
         fg.add_child(folium.Marker(location=[latitude, longitude]))
     m.add_child(fg)
-
-    folium_data = st_folium(m, width=2000)
+    folium_data = st_folium(m, width=3000)
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
@@ -119,4 +74,4 @@ def teste():
         st.warning('Por favor clique num ponto para ver a imagem')
 
 if __name__ == '__main__':
-    teste()
+    main()
