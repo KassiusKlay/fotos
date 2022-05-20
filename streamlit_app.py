@@ -54,14 +54,14 @@ def main():
     m = folium.Map(
             location=[39.557191, -7.8536599],
             zoom_start=3,)
-    for i in data:
-        metadata = i[1]
-        latitude = round(metadata['latitude'], proximity_round)
-        longitude = round(metadata['longitude'], proximity_round)
-        folium.Marker(
-                location=[latitude, longitude],
-                icon=folium.Icon(color='green', prefix='fa', icon='leaf'),
-                ).add_to(m)
+#     for i in data:
+        # metadata = i[1]
+        # latitude = round(metadata['latitude'], proximity_round)
+        # longitude = round(metadata['longitude'], proximity_round)
+        # folium.Marker(
+                # location=[latitude, longitude],
+                # icon=folium.Icon(color='green', prefix='fa', icon='leaf'),
+                # ).add_to(m)
     folium_data = st_folium(m, width=725)
     cols = st.columns(3)
     try:
