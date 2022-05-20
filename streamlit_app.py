@@ -46,7 +46,7 @@ def main():
     data = get_db_data()
     m = folium.Map(
             location=[39.557191, -7.8536599],
-            zoom_start=3,)
+            zoom_start=3, 'cartodbpositron')
     fg = folium.FeatureGroup(name='Marks')
     for i in data:
         metadata = i[1]
