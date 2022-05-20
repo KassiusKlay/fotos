@@ -90,7 +90,7 @@ def teste():
         popup="Liberty Bell", 
         tooltip="Liberty Bell"
     ).add_to(m)
-        data = get_db_data()
+    data = get_db_data()
     fg = folium.FeatureGroup(name='Marks')
     for i in data:
         metadata = i[1]
