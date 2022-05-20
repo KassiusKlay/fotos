@@ -96,7 +96,9 @@ def teste():
         metadata = i[1]
         latitude = round(metadata['latitude'], proximity_round)
         longitude = round(metadata['longitude'], proximity_round)
-        fg.add_child(folium.Marker(location=[latitude, longitude]))
+        fg.add_child(folium.Marker(
+            location=[latitude, longitude],
+            icon=folium.Icon(color='green', prefix='fa', icon='leaf'))
     m.add_child(fg)
 
     st_data = st_folium(m, width = 725)
