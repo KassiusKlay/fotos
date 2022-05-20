@@ -9,6 +9,7 @@ st.set_page_config(layout='wide')
 proximity_round = 2
 
 
+@st.experimental_singleton
 def init_connection():
     connection = psycopg2.connect(**st.secrets['postgres'])
     connection.autocommit = True
@@ -26,9 +27,7 @@ def run_query(connection, query, fetch=None):
             return cur.fetchall()
 
 
-@st.experimental_singleton
 def get_db_data():
-    connection = init_connection()
     data = run_query(connection, """
             SELECT * from fotos
             WHERE json->>'latitude' is NOT NULL""", 1)
