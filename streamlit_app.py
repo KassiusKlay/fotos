@@ -100,7 +100,7 @@ def teste():
     m.add_child(fg)
 
     folium_data = st_folium(m, width = 725)
-        cols = st.columns(3)
+    cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
         clicked_lng = folium_data['last_object_clicked']['lng']
