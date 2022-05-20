@@ -45,16 +45,20 @@ def main():
     """)
     data = get_db_data()
     m = folium.Map(
-            location=[39.557191, -7.8536599],
+            location=[38.699638 , -9.267694],
             zoom_start=3, tiles='cartodbpositron')
     fg = folium.FeatureGroup(name='Marks')
+    list_of_coords = []
     for i in data:
         metadata = i[1]
         latitude = round(metadata['latitude'], proximity_round)
         longitude = round(metadata['longitude'], proximity_round)
-        fg.add_child(folium.Marker(location=[latitude, longitude]))
+        list_of_coords.append((latitude, longitude))
+    list_of_coords = list(set(list_of_coords))
+    for i in list_of_coords:
+        fg.add_child(folium.Marker(location=i))
     m.add_child(fg)
-    folium_data = st_folium(m, width=3000)
+    folium_data = st_folium(m, width=3000, key='map')
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
