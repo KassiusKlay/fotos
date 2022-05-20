@@ -44,8 +44,7 @@ def get_image_from_byte_array(byte_array):
 def get_folium_map(data):
     m = folium.Map(
             location=[39.557191, -7.8536599],
-            zoom_start=3,
-            tiles='cartodbpositron',)
+            zoom_start=3,)
 #     for i in data:
         # metadata = i[1]
         # latitude = round(metadata['latitude'], proximity_round)
