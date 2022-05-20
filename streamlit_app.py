@@ -90,16 +90,7 @@ def teste():
         popup="Liberty Bell", 
         tooltip="Liberty Bell"
     ).add_to(m)
-    
-    data = get_db_data()
-    for i in data:
-        metadata = i[1]
-        latitude = round(metadata['latitude'], proximity_round)
-        longitude = round(metadata['longitude'], proximity_round)
-        folium.Marker(
-                location=[latitude, longitude],
-                icon=folium.Icon(color='green', prefix='fa', icon='leaf'),
-                ).add_to(m)
+    folium.Marker([[39.91, 39,89],[-75.10, -75]]).add_to(m)
     # call to render Folium map in Streamlit
     st_data = st_folium(m, width = 725)
 
