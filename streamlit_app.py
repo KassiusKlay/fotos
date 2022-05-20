@@ -42,9 +42,7 @@ def get_image_from_byte_array(byte_array):
 
 
 def get_folium_map(data):
-    m = folium.Map(
-            location=[39.557191, -7.8536599],
-            zoom_start=3,)
+
 #     for i in data:
         # metadata = i[1]
         # latitude = round(metadata['latitude'], proximity_round)
@@ -61,8 +59,10 @@ def main():
     Vegan Food 🌱 around the World 🗺️
     """)
     data = get_db_data()
-    m = get_folium_map(data)
-    st_folium(m, width=1200)
+    m = folium.Map(
+            location=[39.557191, -7.8536599],
+            zoom_start=3,)
+    st_folium(m, width=725)
     # cols = st.columns(3)
     # try:
         # clicked_lat = folium_data['last_object_clicked']['lat']
