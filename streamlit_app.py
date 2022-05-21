@@ -4,6 +4,8 @@ import folium
 from PIL import Image
 from io import BytesIO
 import psycopg2
+from folium.plugins import MarkerCluster
+import pandas as pd
 
 st.set_page_config(layout='wide')
 proximity_round = 2
@@ -26,6 +28,7 @@ def run_query(connection, query, fetch=None):
         if fetch:
             return cur.fetchall()
 
+
 @st.experimental_memo
 def get_db_data():
     data = run_query(connection, """
@@ -39,26 +42,32 @@ def get_image_from_byte_array(byte_array):
     img = Image.open(byte_object)
     return img
 
+
 def main():
     st.header("""
     Vegan Food 🌱 around the World 🗺️
     """)
     data = get_db_data()
     m = folium.Map(
-            location=[38.699638 , -9.267694],
+            location=[38.699638, -9.267694],
             zoom_start=3, tiles='cartodbpositron')
     fg = folium.FeatureGroup(name='Marks')
-    list_of_coords = []
+    df = pd.DataFrame()
     for i in data:
         metadata = i[1]
         latitude = round(metadata['latitude'], proximity_round)
         longitude = round(metadata['longitude'], proximity_round)
-        list_of_coords.append((latitude, longitude))
-    list_of_coords = list(set(list_of_coords))
-    for i in list_of_coords:
-        fg.add_child(folium.Marker(location=i))
+        country = metadata['place']['address']['country']
+        df = pd.concat([df, pd.DataFrame.from_records([{
+            'country': country,
+            'latitude': latitude,
+            'longitude': longitude}])])
+    df = df.drop_duplicates()
+    fg = folium.FeatureGroup(name='Marks')
+    for _, country_df in df.groupby('country'):
+        MarkerCluster(country_df[['latitude', 'longitude']].values).add_to(fg)
     m.add_child(fg)
-    folium_data = st_folium(m, width=3000, key='map')
+    folium_data = st_folium(m, width=725, key='map')
     cols = st.columns(3)
     try:
         clicked_lat = folium_data['last_object_clicked']['lat']
@@ -76,6 +85,7 @@ def main():
                 i = 0
     except TypeError:
         st.warning('Por favor clique num ponto para ver a imagem')
+
 
 if __name__ == '__main__':
     main()
