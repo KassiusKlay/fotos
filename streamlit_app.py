@@ -29,7 +29,7 @@ def run_query(connection, query, fetch=None):
             return cur.fetchall()
 
 
-@st.experimental_memo
+@st.experimental_memo(ttl=6000)
 def get_db_data():
     data = run_query(connection, """
             SELECT * from fotos
@@ -83,6 +83,7 @@ def main():
             i += 1
             if i == 3:
                 i = 0
+                cols = st.columns(3)
     except TypeError:
         st.warning('Por favor clique num ponto para ver a imagem')
 
